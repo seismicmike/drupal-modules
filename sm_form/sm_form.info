@@ -1,0 +1,26 @@
+name = SeismicMike Form
+description = A simple form with some basic validation that stores the data in a database table and e-mails it to a configured recipient.
+core = 7.x
+version = 7.x-1.0
+
+; I am using the xautoload to enable PSR-4 autoloading of my Submission class,
+; which is available via the PSR-4 namespace Drupal\sm_form.
+dependencies[] = xautoload
+
+; Alternatively, I could skip xautoload and have Drupal's autoload system load
+; the class by listing it here:
+
+;files[] = src/Submission.php
+
+; Or as I've more commonly seen in Drupal modules, but is not PSR compliant:
+
+;files[] = sm_form.submission.inc
+
+; Or
+
+;files[] = includes/sm_form.submission.inc
+
+; This would not, however, give me the benefit of namespacing, so I would have
+; to name my class something ridiculous like SeismicMikeFeedbackFormSubmission
+; or something like that. No thanks. I just prefer clean code and best
+; practices as much as possible.

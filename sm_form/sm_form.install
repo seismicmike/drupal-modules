@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Install file for SeismicMike Form.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function sm_form_schema() {
+  $schema['sm_form_submission'] = [
+    'fields' => [
+      'sid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'length' => 255,
+      ],
+      'comments' => [
+        'type' => 'text',
+        'size' => 'big',
+      ],
+    ],
+    'primary key' => ['sid'],
+  ];
+  return $schema;
+}

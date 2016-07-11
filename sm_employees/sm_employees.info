@@ -1,0 +1,5 @@
+name = SeismicMike Employees
+description = This is a non-entity based CRUD interface for a basic Employee Database. It uses custom objects and db schema to model/store the data and uses views_data to expose the database to views for display.
+core = 7.x
+version = 7.x-1.0
+dependencies[] = views

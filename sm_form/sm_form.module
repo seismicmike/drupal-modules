@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * SeismicMike Form Module.
+ */
+
+use Drupal\sm_form\Submission;
+
+/**
+ * Implements hook_menu().
+ */
+function sm_form_menu() {
+  $items['sm_form'] = [
+    'title' => 'Feedback Form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['sm_form_form'],
+    'access arguments' => ['access content'],
+    'type' => MENU_CALLBACK,
+    'file' => 'sm_form.form.inc',
+  ];
+
+  $items['admin/config/settings/sm_form'] = [
+    'title' => 'Configure the Feedback Form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['sm_form_admin'],
+    'access arguments' => ['administer site configuration'],
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'sm_form.admin.inc',
+  ];
+
+  return $items;
+}
+
+/**
+ * Validation callback for e-mail addresses.
+ *
+ * @param array $element
+ *   The form element being validated.
+ * @param array $form_state
+ *   The form state that is trying to be submitted.
+ *
+ * @return bool
+ *   Whether to allow the submission of this value for this element.
+ */
+function sm_form_validate_email($element, &$form_state) {
+  // Skip if the field is empty.
+  // If we get this far with an empty field, then it is optional.
+  // We only want to validate non-empty fields.
+  if ($element['#value'] == '') {
+    return TRUE;
+  }
+
+  if (!valid_email_address($element['#value'])) {
+    form_error($element, t('Please enter a valid e-mail address.'));
+    return FALSE;
+  }
+
+  // Input is valid.
+  return TRUE;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function sm_form_mail($key, &$message, $params) {
+  if ('new_submission' === $key) {
+    $submission = $params['submission'];
+
+    if ($submission instanceof Submission) {
+      // Construct and send an e-mail.
+      $message['subject'] = 'A new submission has been made on the SeismicMike Feedback Form';
+      $message['body'][] = 'Name: ' . $submission->getName();
+      $message['body'][] = 'E-mail: ' . $submission->getEmail();
+      $message['body'][] = 'Comments: ';
+      $message['body'][] = $submission->getComments();
+    }
+  }
+}

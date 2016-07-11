@@ -1,0 +1,4 @@
+name = SeismicMike Simple Event Registration
+description = A simple event registration form that collects payment.
+core = 7.x
+version = 7.x-1.0
