@@ -5,7 +5,7 @@
  * Contains the form for SM Form.
  */
 
-use Drupal\sm_form\Submission;
+use Drupal\sm_form\SampleForm as Form;
 
 /**
  * Builds the feedback submission form.
@@ -19,31 +19,48 @@ use Drupal\sm_form\Submission;
  *   An array of form elements for drupal_get_form to render.
  */
 function sm_form_form($form, &$form_state) {
-  $form['name'] = [
-    '#type' => 'textfield',
-    '#title' => 'Name',
-    '#required' => TRUE,
-  ];
+  $form = new Form($form, $form_state);
 
-  $form['email'] = [
-    '#type' => 'textfield',
-    '#title' => 'E-mail Address',
-    '#required' => TRUE,
+  $form->addTextField('name', 'Name', '', TRUE);
+
+  $form->addTextField('email', 'E-mail Address', '', TRUE, '', [
     '#element_validate' => ['sm_form_validate_email'],
-  ];
+  ]);
 
-  $form['comments'] = [
-    '#type' => 'textarea',
+  $form->addTextArea('comments', 'Comments', '', TRUE, '', [
     '#rows' => 5,
-    '#required' => TRUE,
-  ];
+  ]);
 
-  $form['actions']['submit'] = [
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  ];
+  $sub_form = new Form();
 
-  return $form;
+  $sub_form->addSelect('gender', 'Gender', drupal_map_assoc(['Male', 'Female']));
+
+  $sub_form->addRadios('notifications', 'Notification Preferences', [
+    'none' => 'I prefer not to receive notifications',
+    'email_only' => 'I prefer to receive notifications by e-mail',
+    'sms_only' => 'I prefer to receive notifications by SMS',
+    'both' => 'I prefer to receive both SMS and E-mail notifications',
+  ]);
+
+  $sub_form->addCheckboxes('notifications2', 'I would like to receive notifications by the following:', [
+    'courier' => 'Courier',
+    'pigeon' => 'Carrier Pigeon',
+    'smoke' => 'Smoke Signals',
+    'pony' => 'Pony Express',
+    'telegram' => 'Telegraph',
+    'snail' => 'Postal Mail',
+    'phone' => 'Phone Call',
+    'email' => 'E-Mail',
+    'sms' => 'SMS',
+  ]);
+
+  $sub_fields = $sub_form->getForm();
+
+  $form->addFieldSet('profile', 'Profile Settings', $sub_fields, '');
+
+  $form->addSubmit();
+
+  return $form->getForm();
 }
 
 /**
@@ -54,14 +71,7 @@ function sm_form_form($form, &$form_state) {
  * @param array &$form_state
  *   The data/configuration of the form at time of submission.
  */
-function sm_form_submit($form, &$form_state) {
-  // Store the sub in the db.
-  $submission = Submission::createFromFormState($form_state);
-  $submission->save();
-
-  // E-mail the sub to the configured recipient.
-  $recipient = variable_get('sm_form_recipient', 'seismicmike@gmail.com');
-  drupal_mail('sm_form', 'new_submission', $recipient, language_default(), [
-    'submission' => $submission,
-  ]);
+function sm_form_form_submit($form, &$form_state) {
+  $form = new Form($form, $form_state);
+  $form->submit();
 }
