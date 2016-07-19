@@ -1,6 +1,8 @@
 # Mike Lewis
 Expert Drupal Engineer
 
+This repository is just some sample code that I put up there to show off what I can do. As of 7/19/2016, this is still a work in progress, so please don't judge its incompleteness too harshly.
+
 ## Contents
  * Contact Info
  * Skills
