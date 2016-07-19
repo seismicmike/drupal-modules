@@ -20,7 +20,7 @@ function sm_form_menu() {
     'file' => 'sm_form.form.inc',
   ];
 
-  $items['admin/config/settings/sm_form'] = [
+  $items['admin/config/system/sm_form'] = [
     'title' => 'Configure the Feedback Form',
     'page callback' => 'drupal_get_form',
     'page arguments' => ['sm_form_admin'],

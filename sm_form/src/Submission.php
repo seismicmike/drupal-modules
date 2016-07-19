@@ -221,7 +221,7 @@ class Submission {
    *   The comments.
    */
   public function getComments() {
-    return $this->comment;
+    return $this->comments;
   }
 
   /**
